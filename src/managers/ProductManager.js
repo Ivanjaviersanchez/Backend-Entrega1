@@ -55,7 +55,17 @@ export default class ProductManager {
 
   async deleteProduct(id) {
     const products = await this.#readFile();
-    const filtered = products.filter(p => p.id !== id);
-    await this.#writeFile(filtered);
+    const newProducts = products.filter(p => p.id !== id);
+
+    // Si no cambió nada → no existía
+    if (products.length === newProducts.length) {
+      console.log("No se encontró producto con id:", id);
+      return null;
+    }
+
+    await this.#writeFile(newProducts);
+    console.log("Producto eliminado correctamente:", id);
+
+    return newProducts;
   }
 }
